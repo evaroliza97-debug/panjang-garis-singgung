@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPI Matematika XI - Garis Singgung Persekutuan Lingkaran</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax for rendering Mathematical formulas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            height: 380px;
+        }
+        canvas {
+            border-radius: 0.75rem;
+            background-color: #f8fafc;
+        }
+        .tab-btn.active {
+            background-color: #2563eb;
+            color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between selection:bg-blue-200">
+
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-indigo-700 via-blue-600 to-teal-500 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 sm:px-6 flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-white/10 rounded-xl backdrop-blur-md">
+                    <i class="fa-solid font-bold fa-compass-drafting text-2xl text-yellow-300"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg sm:text-xl font-extrabold tracking-tight">MPI Matematika Fase F</h1>
+                    <p class="text-xs text-blue-100">Garis Singgung Persekutuan Luar & Dalam Dua Lingkaran</p>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center space-x-2 text-xs bg-black/20 px-3 py-1.5 rounded-full border border-white/10">
+                <span class="bg-emerald-400 text-slate-900 font-bold px-2 py-0.5 rounded-full">Kelas XI</span>
+                <span>Mata Pelajaran: Matematika (Lanjut/Umum)</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex-grow w-full">
+
+        <!-- Navigation Tabs -->
+        <nav class="flex flex-wrap gap-2 mb-6 bg-white p-2 rounded-2xl shadow-sm border border-slate-200" id="nav-tabs">
+            <button onclick="switchTab('konsep')" id="tab-konsep" class="tab-btn active flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span>1. Konsep & Perbedaan</span>
+            </button>
+            <button onclick="switchTab('simulasi')" id="tab-simulasi" class="tab-btn flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-sliders"></i>
+                <span>2. Eksplorasi & Lab Visual</span>
+            </button>
+            <button onclick="switchTab('pembuktian')" id="tab-pembuktian" class="tab-btn flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-square-root-variable"></i>
+                <span>3. Penurunan Rumus</span>
+            </button>
+            <button onclick="switchTab('kuis')" id="tab-kuis" class="tab-btn flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 text-slate-600 hover:bg-slate-100">
+                <i class="fa-solid fa-pen-to-square"></i>
+                <span>4. Kuis & Tantangan</span>
+            </button>
+        </nav>
+
+        <!-- TAB 1: KONSEP & PERBEDAAN -->
+        <section id="sec-konsep" class="tab-content block space-y-6">
+            <!-- Capaian & Tujuan Pembelajaran -->
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-5 shadow-sm">
+                <h2 class="text-base font-bold text-blue-900 uppercase tracking-wide mb-2 flex items-center">
+                    <i class="fa-solid fa-bullseye text-blue-600 mr-2"></i> Tujuan Pembelajaran
+                </h2>
+                <ul class="list-disc list-inside text-sm text-slate-700 space-y-1">
+                    <li>Peserta didik dapat **membedakan** garis singgung persekutuan luar (GSPL) dan dalam (GSPD) dua lingkaran secara visual.</li>
+                    <li>Peserta didik dapat **menemukan dan membuktikan** rumus GSPL dan GSPD menggunakan prinsip Teorema Pythagoras.</li>
+                    <li>Peserta didik dapat **menyelesaikan masalah kontekstual** terkait rantai sepeda, roda gigi, dan hubungan dua lingkaran.</li>
+                </ul>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- GSPL Card -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-blue-300 transition">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-slate-800">1. Garis Singgung Persekutuan Luar (GSPL)</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1 rounded-full">Luar</span>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-4">
+                        Garis singgung yang menyentuh kedua lingkaran di mana **kedua pusat lingkaran berada pada sisi yang sama** terhadap garis singgung tersebut. Contoh nyata: *Rantai rantai sepeda pada dua gir*.
+                    </p>
+                    <div class="bg-slate-100 p-4 rounded-xl text-center mb-4 border border-slate-200">
+                        <p class="text-xs text-slate-500 mb-1">Rumus GSPL ($l$)</p>
+                        <p class="text-xl font-bold text-blue-700">\( l = \sqrt{d^2 - (R - r)^2} \)</p>
+                    </div>
+                    <ul class="text-xs text-slate-500 space-y-1">
+                        <li><b class="text-slate-700">$l$:</b> Panjang garis singgung persekutuan luar</li>
+                        <li><b class="text-slate-700">$d$:</b> Jarak antara kedua titik pusat ($P_1 P_2$)</li>
+                        <li><b class="text-slate-700">$R$:</b> Jari-jari lingkaran besar</li>
+                        <li><b class="text-slate-700">$r$:</b> Jari-jari lingkaran kecil</li>
+                    </ul>
+                </div>
+
+                <!-- GSPD Card -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-emerald-300 transition">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-bold text-slate-800">2. Garis Singgung Persekutuan Dalam (GSPD)</h3>
+                        <span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-1 rounded-full">Dalam</span>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-4">
+                        Garis singgung yang **memotong garis hubung kedua titik pusat** lingkaran. Kedua pusat lingkaran berada pada sisi yang berseberangan terhadap garis singgung. Contoh: *Sabuk pengikat silang*.
+                    </p>
+                    <div class="bg-slate-100 p-4 rounded-xl text-center mb-4 border border-slate-200">
+                        <p class="text-xs text-slate-500 mb-1">Rumus GSPD ($d_{in}$)</p>
+                        <p class="text-xl font-bold text-emerald-700">\( d_{in} = \sqrt{d^2 - (R + r)^2} \)</p>
+                    </div>
+                    <ul class="text-xs text-slate-500 space-y-1">
+                        <li><b class="text-slate-700">$d_{in}$:</b> Panjang garis singgung persekutuan dalam</li>
+                        <li><b class="text-slate-700">$d$:</b> Jarak antara kedua titik pusat ($P_1 P_2$)</li>
+                        <li><b class="text-slate-700">$R$:</b> Jari-jari lingkaran besar</li>
+                        <li><b class="text-slate-700">$r$:</b> Jari-jari lingkaran kecil</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Syarat Keberadaan Garis Singgung -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <h3 class="text-md font-bold text-slate-800 mb-3 flex items-center">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-500 mr-2"></i> Syarat Keberadaan Garis Singgung
+                </h3>
+                <div class="grid sm:grid-cols-2 gap-4 text-sm text-slate-600">
+                    <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl">
+                        <strong class="text-amber-900 block mb-1">Syarat GSPL ($l$ Ada Real)</strong>
+                        Jarak pusat ($d$) harus lebih besar dari selisih kedua jari-jari: <br>
+                        <code class="bg-amber-100 px-2 py-0.5 rounded text-amber-900 font-bold">$d > (R - r)$</code>
+                    </div>
+                    <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl">
+                        <strong class="text-amber-900 block mb-1">Syarat GSPD ($d_{in}$ Ada Real)</strong>
+                        Jarak pusat ($d$) harus lebih besar dari jumlah kedua jari-jari: <br>
+                        <code class="bg-amber-100 px-2 py-0.5 rounded text-amber-900 font-bold">$d > (R + r)$</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: EKSPLORASI & LAB VISUAL -->
+        <section id="sec-simulasi" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 grid lg:grid-cols-12 gap-6">
+                <!-- Control Panel Left -->
+                <div class="lg:col-span-4 space-y-5">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800 mb-1">Laboratorium Geometri</h2>
+                        <p class="text-xs text-slate-500">Ubah nilai parameter di bawah ini untuk mengamati perubahan bentuk geometri.</p>
+                    </div>
+
+                    <!-- Tipe Garis Singgung Selector -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 uppercase mb-2">Tipe Garis Singgung</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button id="btn-mode-luar" onclick="setMode('luar')" class="py-2.5 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-blue-600 text-white border-blue-600 shadow-sm">
+                                <i class="fa-solid fa-arrows-left-right-to-line"></i>
+                                <span>Persekutuan Luar</span>
+                            </button>
+                            <button id="btn-mode-dalam" onclick="setMode('dalam')" class="py-2.5 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200">
+                                <i class="fa-solid fa-xmark"></i>
+                                <span>Persekutuan Dalam</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sliders -->
+                    <div class="space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <!-- R1 Slider -->
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                                <span>Jari-jari Lingkaran 1 ($R$):</span>
+                                <span id="val-r1" class="text-blue-600 font-bold">8 cm</span>
+                            </div>
+                            <input type="range" id="slider-r1" min="3" max="12" step="0.5" value="8" oninput="updateSimulation()" class="w-full accent-blue-600 cursor-pointer">
+                        </div>
+
+                        <!-- R2 Slider -->
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                                <span>Jari-jari Lingkaran 2 ($r$):</span>
+                                <span id="val-r2" class="text-blue-600 font-bold">3 cm</span>
+                            </div>
+                            <input type="range" id="slider-r2" min="1" max="8" step="0.5" value="3" oninput="updateSimulation()" class="w-full accent-blue-600 cursor-pointer">
+                        </div>
+
+                        <!-- Distance Slider -->
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+                                <span>Jarak Pusat ($d$):</span>
+                                <span id="val-d" class="text-indigo-600 font-bold">13 cm</span>
+                            </div>
+                            <input type="range" id="slider-d" min="10" max="25" step="0.5" value="13" oninput="updateSimulation()" class="w-full accent-indigo-600 cursor-pointer">
+                        </div>
+                    </div>
+
+                    <!-- Option Toggles -->
+                    <div class="space-y-2">
+                        <label class="flex items-center space-x-2 text-xs font-medium text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="chk-pythagoras" checked onchange="updateSimulation()" class="rounded text-blue-600 focus:ring-blue-500 h-4 w-4">
+                            <span>Tampilkan Segitiga Siku-Siku Pythagoras</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-xs font-medium text-slate-700 cursor-pointer">
+                            <input type="checkbox" id="chk-labels" checked onchange="updateSimulation()" class="rounded text-blue-600 focus:ring-blue-500 h-4 w-4">
+                            <span>Tampilkan Label Komponen/Titik</span>
+                        </label>
+                    </div>
+
+                    <!-- Calculation Output -->
+                    <div class="bg-indigo-900 text-white p-4 rounded-xl shadow-inner space-y-2">
+                        <p class="text-xs text-indigo-200 font-medium uppercase tracking-wider">Hasil Perhitungan Otomatis</p>
+                        <div class="flex justify-between items-baseline">
+                            <span class="text-xs text-indigo-100" id="calc-label-title">Panjang GSPL:</span>
+                            <span id="calc-result" class="text-2xl font-black text-amber-300">12.00 cm</span>
+                        </div>
+                        <div class="text-[11px] text-indigo-200 border-t border-indigo-700/60 pt-2 font-mono" id="calc-step">
+                            \(\sqrt{13^2 - (8 - 3)^2} = \sqrt{169 - 25} = 12\)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Canvas Visualizer Right -->
+                <div class="lg:col-span-8 flex flex-col justify-between">
+                    <div class="canvas-container bg-slate-900 rounded-xl shadow-inner overflow-hidden flex items-center justify-center relative">
+                        <canvas id="simCanvas" width="700" height="380" class="w-full h-full"></canvas>
+                        <!-- Floating Warning Badge -->
+                        <div id="sim-warning" class="hidden absolute top-4 left-4 right-4 bg-rose-500/90 text-white text-xs px-4 py-2 rounded-lg backdrop-blur-md font-medium text-center shadow-lg">
+                            <i class="fa-solid fa-circle-exclamation mr-1"></i>
+                            Garis singgung tidak terbentuk (Imajiner) karena lingkaran saling berpotongan/berada di dalam! Jarak $d$ kurang besar.
+                        </div>
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="mt-4 flex flex-wrap justify-center gap-4 text-xs font-medium text-slate-600 bg-slate-100 p-3 rounded-xl border border-slate-200">
+                        <div class="flex items-center"><span class="w-3 h-3 rounded-full bg-blue-500 mr-1.5"></span> Lingkaran 1</div>
+                        <div class="flex items-center"><span class="w-3 h-3 rounded-full bg-emerald-500 mr-1.5"></span> Lingkaran 2</div>
+                        <div class="flex items-center"><span class="w-3 h-3 rounded-full bg-rose-500 mr-1.5"></span> Garis Singgung</div>
+                        <div class="flex items-center"><span class="w-3 h-3 rounded-full bg-indigo-500 mr-1.5"></span> Jarak Pusat ($d$)</div>
+                        <div class="flex items-center"><span class="w-3 h-3 rounded-full bg-amber-500 mr-1.5"></span> Proyeksi Segitiga</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: PENURUNAN RUMUS -->
+        <section id="sec-pembuktian" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-8">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800 mb-2">Penurunan Rumus dengan Teorema Pythagoras</h2>
+                    <p class="text-sm text-slate-600">
+                        Kunci dari garis singgung persekutuan adalah menggeser garis singgung tersebut hingga membentuk **Segitiga Siku-siku** yang melibatkan jarak pusat dua lingkaran.
+                    </p>
+                </div>
+
+                <!-- Proof GSPL -->
+                <div class="border-l-4 border-blue-600 pl-4 space-y-3">
+                    <h3 class="text-lg font-bold text-blue-900">A. Bukti Rumus Garis Singgung Persekutuan Luar (GSPL)</h3>
+                    <div class="grid md:grid-cols-2 gap-6 items-center">
+                        <div class="text-sm text-slate-700 space-y-2 leading-relaxed">
+                            <p>1. Pandang lingkaran $P_1$ (jari-jari $R$) dan $P_2$ (jari-jari $r$). Misal garis singgung luar menyinggung di $A$ dan $B$, sehingga $AB = l$.</p>
+                            <p>2. Tarik garis searah dari $P_2$ sejajar $AB$ hingga memotong $P_1 A$ di titik $C$.</p>
+                            <p>3. Karena $AB \perp P_1 A$ dan $AB \perp P_2 B$, maka $ABC P_2$ membentuk **persegi panjang**, sehingga:</p>
+                            <ul class="list-disc list-inside pl-3 font-semibold text-slate-800">
+                                <li>$P_2 C = AB = l$</li>
+                                <li>$AC = P_2 B = r$</li>
+                                <li>$P_1 C = P_1 A - AC = R - r$</li>
+                            </ul>
+                            <p>4. Perhatikan segitiga siku-siku $\triangle P_1 C P_2$ (siku-siku di $C$). Berdasarkan Teorema Pythagoras:</p>
+                            <div class="bg-blue-50 p-3 rounded-xl border border-blue-200 text-center text-blue-900 font-bold">
+                                \((P_1 P_2)^2 = (P_1 C)^2 + (P_2 C)^2 \)<br>
+                                \( d^2 = (R - r)^2 + l^2 \)<br>
+                                \( l^2 = d^2 - (R - r)^2 \)<br>
+                                <span class="text-lg text-blue-700">\( l = \sqrt{d^2 - (R - r)^2} \)</span>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                            <svg viewBox="0 0 350 220" class="w-full h-auto max-w-sm mx-auto">
+                                <!-- Base circles -->
+                                <circle cx="90" cy="120" r="70" fill="none" stroke="#2563eb" stroke-width="2" />
+                                <circle cx="270" cy="120" r="35" fill="none" stroke="#10b981" stroke-width="2" />
+                                <!-- Center Points -->
+                                <circle cx="90" cy="120" r="4" fill="#1e293b" />
+                                <text x="80" y="140" font-size="12" font-weight="bold">P1</text>
+                                <circle cx="270" cy="120" r="4" fill="#1e293b" />
+                                <text x="275" y="140" font-size="12" font-weight="bold">P2</text>
+                                <!-- Line d -->
+                                <line x1="90" y1="120" x2="270" y2="120" stroke="#6366f1" stroke-width="2" stroke-dasharray="4" />
+                                <text x="180" y="135" font-size="12" fill="#6366f1" font-weight="bold">d</text>
+                                <!-- Tangent Line -->
+                                <line x1="90" y1="50" x2="270" y2="85" stroke="#f43f5e" stroke-width="2.5" />
+                                <text x="180" y="60" font-size="12" fill="#f43f5e" font-weight="bold">AB = l</text>
+                                <!-- Radii -->
+                                <line x1="90" y1="120" x2="90" y2="50" stroke="#2563eb" stroke-width="1.5" />
+                                <text x="65" y="90" font-size="11" fill="#2563eb">R</text>
+                                <line x1="270" y1="120" x2="270" y2="85" stroke="#10b981" stroke-width="1.5" />
+                                <text x="280" y="105" font-size="11" fill="#10b981">r</text>
+                                <!-- Triangle Projection -->
+                                <line x1="270" y1="120" x2="90" y2="85" stroke="#d97706" stroke-width="2" stroke-dasharray="3" />
+                                <circle cx="90" cy="85" r="3" fill="#d97706" />
+                                <text x="75" y="85" font-size="11" font-weight="bold" fill="#d97706">C</text>
+                                <text x="100" y="75" font-size="10" fill="#d97706">R - r</text>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-slate-200">
+
+                <!-- Proof GSPD -->
+                <div class="border-l-4 border-emerald-600 pl-4 space-y-3">
+                    <h3 class="text-lg font-bold text-emerald-900">B. Bukti Rumus Garis Singgung Persekutuan Dalam (GSPD)</h3>
+                    <div class="grid md:grid-cols-2 gap-6 items-center">
+                        <div class="text-sm text-slate-700 space-y-2 leading-relaxed">
+                            <p>1. Pandang dua lingkaran $P_1$ dan $P_2$. Garis singgung dalam menyinggung di $A$ dan $B$, dengan panjang $AB = d_{in}$.</p>
+                            <p>2. Perpanjang jari-jari $P_1 A$ sejauh $r$ sampai titik $D$, sehingga $AD = P_2 B = r$.</p>
+                            <p>3. Hubungkan $D$ ke $P_2$, sehingga $D B P_2 A$ membentuk persegi panjang di mana $P_2 D = AB = d_{in}$.</p>
+                            <p>4. Jari-jari total pada kaki segitiga tegak menjadi $P_1 D = P_1 A + AD = R + r$.</p>
+                            <p>5. Pada segitiga siku-siku $\triangle P_1 D P_2$ (siku-siku di $D$):</p>
+                            <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 text-center text-emerald-900 font-bold">
+                                \((P_1 P_2)^2 = (P_1 D)^2 + (P_2 D)^2 \)<br>
+                                \( d^2 = (R + r)^2 + (d_{in})^2 \)<br>
+                                \( (d_{in})^2 = d^2 - (R + r)^2 \)<br>
+                                <span class="text-lg text-emerald-700">\( d_{in} = \sqrt{d^2 - (R + r)^2} \)</span>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                            <svg viewBox="0 0 350 240" class="w-full h-auto max-w-sm mx-auto">
+                                <!-- Base circles -->
+                                <circle cx="90" cy="130" r="60" fill="none" stroke="#2563eb" stroke-width="2" />
+                                <circle cx="260" cy="130" r="35" fill="none" stroke="#10b981" stroke-width="2" />
+                                <!-- Center Points -->
+                                <circle cx="90" cy="130" r="4" fill="#1e293b" />
+                                <text x="80" y="150" font-size="12" font-weight="bold">P1</text>
+                                <circle cx="260" cy="130" r="4" fill="#1e293b" />
+                                <text x="265" y="150" font-size="12" font-weight="bold">P2</text>
+                                <!-- Line d -->
+                                <line x1="90" y1="130" x2="260" y2="130" stroke="#6366f1" stroke-width="2" stroke-dasharray="4" />
+                                <text x="175" y="145" font-size="12" fill="#6366f1" font-weight="bold">d</text>
+                                <!-- Tangent Line Internal -->
+                                <line x1="126" y1="82" x2="239" y2="158" stroke="#f43f5e" stroke-width="2.5" />
+                                <text x="195" y="105" font-size="11" fill="#f43f5e" font-weight="bold">AB = din</text>
+                                <!-- Projection Extension -->
+                                <line x1="90" y1="130" x2="147" y2="55" stroke="#2563eb" stroke-width="1.5" />
+                                <line x1="147" y1="55" x2="260" y2="130" stroke="#d97706" stroke-width="2" stroke-dasharray="3" />
+                                <circle cx="147" cy="55" r="3" fill="#d97706" />
+                                <text x="145" y="45" font-size="11" font-weight="bold" fill="#d97706">D</text>
+                                <text x="100" y="80" font-size="10" fill="#2563eb">R + r</text>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: KUIS & TANTANGAN INTERAKTIF -->
+        <section id="sec-kuis" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 max-w-3xl mx-auto space-y-6">
+                <!-- Header Kuis -->
+                <div class="flex justify-between items-center border-b border-slate-200 pb-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800">Kuis Evaluasi Interaktif</h2>
+                        <p class="text-xs text-slate-500">Uji pemahamanmu dengan menjawab soal-soal berikut.</p>
+                    </div>
+                    <div class="bg-blue-50 text-blue-700 px-4 py-2 rounded-xl text-center border border-blue-100">
+                        <span class="text-xs uppercase font-semibold block">Skor Kamu</span>
+                        <span id="quiz-score" class="text-2xl font-black">0</span>
+                    </div>
+                </div>
+
+                <!-- Soal Container -->
+                <div id="quiz-container" class="space-y-6">
+                    <!-- Question items will be dynamically injected here -->
+                </div>
+
+                <!-- Submit / Reset Buttons -->
+                <div class="flex justify-between items-center pt-4 border-t border-slate-200">
+                    <button onclick="resetQuiz()" class="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 rounded-xl hover:bg-slate-200 transition flex items-center space-x-1">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        <span>Ulangi Kuis</span>
+                    </button>
+                    <button id="btn-finish-quiz" onclick="checkQuizAnswers()" class="px-6 py-2.5 text-sm font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 shadow-md hover:shadow-blue-200 transition">
+                        Periksa Jawaban
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 mt-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+            <p>© 2026 Media Pembelajaran Interaktif Matematika SMA - Kurikulum Merdeka (Fase F)</p>
+            <p class="mt-1 text-slate-400">Dirancang khusus untuk pembelajaran visual & interaktif geometri lingkaran.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // State Application Variables
+        let simMode = 'luar'; // 'luar' | 'dalam'
+
+        // Quiz Questions Data
+        const quizQuestions = [
+            {
+                id: 1,
+                question: "Dua buah lingkaran memiliki jari-jari masing-masing 11 cm dan 3 cm. Jika jarak kedua titik pusat lingkaran adalah 17 cm, berapakah panjang garis singgung persekutuan luar (GSPL) kedua lingkaran tersebut?",
+                options: ["12 cm", "15 cm", "13 cm", "16 cm"],
+                answer: 1, // Index 1 = 15 cm
+                explanation: "Diketahui $R=11$, $r=3$, $d=17$. <br> $l = \\sqrt{d^2 - (R - r)^2} = \\sqrt{17^2 - (11 - 3)^2} = \\sqrt{289 - 64} = \\sqrt{225} = 15$ cm."
+            },
+            {
+                id: 2,
+                question: "Panjang garis singgung persekutuan dalam (GSPD) dua lingkaran adalah 24 cm. Jarak pusat kedua lingkaran adalah 26 cm. Jika jari-jari salah satu lingkaran adalah 6 cm, berapakah jari-jari lingkaran lainnya?",
+                options: ["3 cm", "4 cm", "5 cm", "6 cm"],
+                answer: 1, // Index 1 = 4 cm
+                explanation: "Diketahui $d_{in}=24$, $d=26$, $R=6$. <br> $d_{in}^2 = d^2 - (R + r)^2 \\implies 24^2 = 26^2 - (6 + r)^2$ <br> $576 = 676 - (6 + r)^2 \\implies (6 + r)^2 = 100 \\implies 6 + r = 10 \\implies r = 4$ cm."
+            },
+            {
+                id: 3,
+                question: "Manakah pernyataan berikut yang BENAR mengenai perbedaan garis singgung persekutuan luar (GSPL) dan dalam (GSPD) pada dua lingkaran yang sama?",
+                options: [
+                    "Panjang GSPL selalu lebih pendek dari GSPD.",
+                    "Panjang GSPL selalu lebih panjang dari GSPD.",
+                    "Panjang GSPL dan GSPD selalu sama.",
+                    "GSPD tidak pernah bisa terbentuk dalam kondisi apapun."
+                ],
+                answer: 1, // Index 1
+                explanation: "GSPL memuat $(R-r)$ sedangkan GSPD memuat $(R+r)$. Karena $(R-r) < (R+r)$, pengurangan pada GSPL lebih kecil, sehingga nilai GSPL selalu lebih panjang daripada GSPD pada dua lingkaran yang sama."
+            },
+            {
+                id: 4,
+                question: "Dua lingkaran berjari-jari 7 cm dan 2 cm. Jarak antara pusat kedua lingkaran tersebut adalah 8 cm. Pernyataan yang tepat adalah...",
+                options: [
+                    "Dapat dibuat GSPL dan GSPD.",
+                    "Hanya dapat dibuat GSPL, sedangkan GSPD tidak dapat dibuat.",
+                    "Hanya dapat dibuat GSPD.",
+                    "Tidak ada garis singgung persekutuan yang dapat dibuat."
+                ],
+                answer: 1, // Index 1
+                explanation: "Syarat GSPL: $d > R - r \\implies 8 > 7 - 2 (8 > 5)$ [MEMENUHI]. <br> Syarat GSPD: $d > R + r \\implies 8 > 7 + 2 (8 > 9)$ [TIDAK MEMENUHI]. Jadi hanya GSPL yang dapat dibuat."
+            }
+        ];
+
+        // User selected answers
+        let userAnswers = {};
+
+        // DOM Loaded Init
+        document.addEventListener('DOMContentLoaded', () => {
+            initSimulation();
+            renderQuiz();
+            // Re-render MathJax formula rendering
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        });
+
+        // Tab Switching Logic
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(`sec-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+
+            if (tabName === 'simulasi') {
+                updateSimulation();
+            }
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        // Set Simulation Mode (Luar vs Dalam)
+        function setMode(mode) {
+            simMode = mode;
+            const btnLuar = document.getElementById('btn-mode-luar');
+            const btnDalam = document.getElementById('btn-mode-dalam');
+
+            if (mode === 'luar') {
+                btnLuar.className = "py-2.5 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-blue-600 text-white border-blue-600 shadow-sm";
+                btnDalam.className = "py-2.5 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200";
+            } else {
+                btnDalam.className = "py-2.5 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-emerald-600 text-white border-emerald-600 shadow-sm";
+                btnLuar.className = "py-2.5 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200";
+            }
+            updateSimulation();
+        }
+
+        // Simulation Canvas Logic
+        function initSimulation() {
+            window.addEventListener('resize', updateSimulation);
+            updateSimulation();
+        }
+
+        function updateSimulation() {
+            const canvas = document.getElementById('simCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            // Set dynamic internal canvas sizing
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+
+            // Get Slider Values
+            const R = parseFloat(document.getElementById('slider-r1').value);
+            const r = parseFloat(document.getElementById('slider-r2').value);
+            const d = parseFloat(document.getElementById('slider-d').value);
+
+            const showPythagoras = document.getElementById('chk-pythagoras').checked;
+            const showLabels = document.getElementById('chk-labels').checked;
+
+            // Update UI Texts
+            document.getElementById('val-r1').innerText = `${R} cm`;
+            document.getElementById('val-r2').innerText = `${r} cm`;
+            document.getElementById('val-d').innerText = `${d} cm`;
+
+            // Calculate Mathematical Tangent
+            let isValid = false;
+            let tangentLength = 0;
+            let stepText = "";
+
+            if (simMode === 'luar') {
+                document.getElementById('calc-label-title').innerText = "Panjang GSPL (l):";
+                if (d > Math.abs(R - r)) {
+                    isValid = true;
+                    tangentLength = Math.sqrt(d * d - Math.pow(R - r, 2));
+                    stepText = `\\(l = \\sqrt{${d}^2 - (${R} - ${r})^2} = \\sqrt{${(d*d).toFixed(1)} - ${Math.pow(R-r, 2).toFixed(1)}} = ${tangentLength.toFixed(2)}\\text{ cm}\\)`;
+                }
+            } else {
+                document.getElementById('calc-label-title').innerText = "Panjang GSPD (din):";
+                if (d > (R + r)) {
+                    isValid = true;
+                    tangentLength = Math.sqrt(d * d - Math.pow(R + r, 2));
+                    stepText = `\\(d_{in} = \\sqrt{${d}^2 - (${R} + ${r})^2} = \\sqrt{${(d*d).toFixed(1)} - ${Math.pow(R+r, 2).toFixed(1)}} = ${tangentLength.toFixed(2)}\\text{ cm}\\)`;
+                }
+            }
+
+            // Warning Badge visibility
+            const warningEl = document.getElementById('sim-warning');
+            if (!isValid) {
+                warningEl.classList.remove('hidden');
+                document.getElementById('calc-result').innerText = "Tidak Ada Real";
+                document.getElementById('calc-step').innerHTML = "<span class='text-rose-300'>Syarat $d > (R \\pm r)$ tidak terpenuhi.</span>";
+            } else {
+                warningEl.classList.add('hidden');
+                document.getElementById('calc-result').innerText = `${tangentLength.toFixed(2)} cm`;
+                document.getElementById('calc-step').innerHTML = stepText;
+            }
+
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+
+            // Clear Canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Scale factor to fit inside canvas visually
+            const scale = Math.min(canvas.width / (d + R + r + 8), canvas.height / (Math.max(R, r) * 4 + 6));
+            
+            // Center alignment math
+            const totalWidth = d * scale;
+            const startX = (canvas.width - totalWidth) / 2;
+            const centerY = canvas.height / 2;
+
+            const p1 = { x: startX, y: centerY };
+            const p2 = { x: startX + d * scale, y: centerY };
+
+            // Draw Center Distance Line (d)
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = '#6366f1'; // Indigo
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Draw Circle 1
+            ctx.beginPath();
+            ctx.arc(p1.x, p1.y, R * scale, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgba(37, 99, 235, 0.1)';
+            ctx.fill();
+            ctx.strokeStyle = '#2563eb';
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+
+            // Draw Circle 2
+            ctx.beginPath();
+            ctx.arc(p2.x, p2.y, r * scale, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.1)';
+            ctx.fill();
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+
+            // Draw Center Points
+            ctx.fillStyle = '#f8fafc';
+            ctx.beginPath(); ctx.arc(p1.x, p1.y, 4, 0, 2*Math.PI); ctx.fill();
+            ctx.beginPath(); ctx.arc(p2.x, p2.y, 4, 0, 2*Math.PI); ctx.fill();
+
+            if (showLabels) {
+                ctx.fillStyle = '#94a3b8';
+                ctx.font = 'bold 12px Inter';
+                ctx.fillText('P1', p1.x - 15, p1.y + 18);
+                ctx.fillText('P2', p2.x + 8, p2.y + 18);
+                ctx.fillStyle = '#818cf8';
+                ctx.fillText(`d = ${d}`, (p1.x + p2.x) / 2 - 15, centerY + 18);
+            }
+
+            // Draw Tangent Lines and Pythagoras Triangle if valid
+            if (isValid) {
+                if (simMode === 'luar') {
+                    // GSPL Angle Math
+                    const alpha = Math.acos((R - r) / d);
+                    
+                    // Tangent points on top
+                    const t1 = {
+                        x: p1.x + R * scale * Math.cos(Math.PI / 2 - alpha),
+                        y: p1.y - R * scale * Math.sin(Math.PI / 2 - alpha)
+                    };
+                    const t2 = {
+                        x: p2.x + r * scale * Math.cos(Math.PI / 2 - alpha),
+                        y: p2.y - r * scale * Math.sin(Math.PI / 2 - alpha)
+                    };
+
+                    // Draw Radii
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y); ctx.lineTo(t1.x, t1.y);
+                    ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 1.5; ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.moveTo(p2.x, p2.y); ctx.lineTo(t2.x, t2.y);
+                    ctx.strokeStyle = '#10b981'; ctx.lineWidth = 1.5; ctx.stroke();
+
+                    // Draw GSPL Line
+                    ctx.beginPath();
+                    ctx.moveTo(t1.x, t1.y); ctx.lineTo(t2.x, t2.y);
+                    ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 3; ctx.stroke();
+
+                    // Show Pythagoras Triangle Projection
+                    if (showPythagoras) {
+                        const projC = {
+                            x: p1.x + (R - r) * scale * Math.cos(Math.PI / 2 - alpha),
+                            y: p1.y - (R - r) * scale * Math.sin(Math.PI / 2 - alpha)
+                        };
+
+                        ctx.beginPath();
+                        ctx.moveTo(p2.x, p2.y);
+                        ctx.lineTo(projC.x, projC.y);
+                        ctx.strokeStyle = '#f59e0b'; // Amber
+                        ctx.lineWidth = 2;
+                        ctx.setLineDash([3, 3]);
+                        ctx.stroke();
+
+                        ctx.beginPath();
+                        ctx.moveTo(p1.x, p1.y);
+                        ctx.lineTo(projC.x, projC.y);
+                        ctx.strokeStyle = '#f59e0b';
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+
+                        // Point C
+                        ctx.fillStyle = '#f59e0b';
+                        ctx.beginPath(); ctx.arc(projC.x, projC.y, 4, 0, 2*Math.PI); ctx.fill();
+                        if (showLabels) {
+                            ctx.fillText('C', projC.x - 12, projC.y - 5);
+                        }
+                    }
+
+                    if (showLabels) {
+                        ctx.fillStyle = '#f43f5e';
+                        ctx.fillText('A', t1.x - 5, t1.y - 8);
+                        ctx.fillText('B', t2.x - 5, t2.y - 8);
+                    }
+
+                } else {
+                    // GSPD Angle Math
+                    const alpha = Math.acos((R + r) / d);
+
+                    // Tangent points across
+                    const t1 = {
+                        x: p1.x + R * scale * Math.cos(Math.PI / 2 - alpha),
+                        y: p1.y - R * scale * Math.sin(Math.PI / 2 - alpha)
+                    };
+                    const t2 = {
+                        x: p2.x - r * scale * Math.cos(Math.PI / 2 - alpha),
+                        y: p2.y + r * scale * Math.sin(Math.PI / 2 - alpha)
+                    };
+
+                    // Draw Radii
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y); ctx.lineTo(t1.x, t1.y);
+                    ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 1.5; ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.moveTo(p2.x, p2.y); ctx.lineTo(t2.x, t2.y);
+                    ctx.strokeStyle = '#10b981'; ctx.lineWidth = 1.5; ctx.stroke();
+
+                    // Draw GSPD Line
+                    ctx.beginPath();
+                    ctx.moveTo(t1.x, t1.y); ctx.lineTo(t2.x, t2.y);
+                    ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 3; ctx.stroke();
+
+                    // Show Pythagoras Triangle Projection
+                    if (showPythagoras) {
+                        const projExt = {
+                            x: p1.x + (R + r) * scale * Math.cos(Math.PI / 2 - alpha),
+                            y: p1.y - (R + r) * scale * Math.sin(Math.PI / 2 - alpha)
+                        };
+
+                        // Extension line
+                        ctx.beginPath();
+                        ctx.moveTo(t1.x, t1.y); ctx.lineTo(projExt.x, projExt.y);
+                        ctx.strokeStyle = '#3b82f6'; ctx.setLineDash([2, 2]); ctx.stroke();
+
+                        // Base right triangle side
+                        ctx.beginPath();
+                        ctx.moveTo(p2.x, p2.y); ctx.lineTo(projExt.x, projExt.y);
+                        ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 2; ctx.setLineDash([3, 3]); ctx.stroke();
+                        ctx.setLineDash([]);
+
+                        // Point D
+                        ctx.fillStyle = '#f59e0b';
+                        ctx.beginPath(); ctx.arc(projExt.x, projExt.y, 4, 0, 2*Math.PI); ctx.fill();
+                        if (showLabels) {
+                            ctx.fillText('D', projExt.x + 5, projExt.y - 5);
+                        }
+                    }
+
+                    if (showLabels) {
+                        ctx.fillStyle = '#f43f5e';
+                        ctx.fillText('A', t1.x - 5, t1.y - 8);
+                        ctx.fillText('B', t2.x + 5, t2.y + 15);
+                    }
+                }
+            }
+        }
+
+        // Quiz Renderer & Checkers
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            quizQuestions.forEach((q, idx) => {
+                const qCard = document.createElement('div');
+                qCard.className = "p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-3";
+                
+                let optionsHTML = '';
+                q.options.forEach((opt, oIdx) => {
+                    optionsHTML += `
+                        <label class="flex items-start space-x-3 p-3 bg-white border border-slate-200 rounded-xl cursor-pointer hover:border-blue-400 transition">
+                            <input type="radio" name="q_${q.id}" value="${oIdx}" onchange="selectAnswer(${q.id}, ${oIdx})" class="mt-0.5 text-blue-600 focus:ring-blue-500">
+                            <span class="text-xs sm:text-sm text-slate-700">${opt}</span>
+                        </label>
+                    `;
+                });
+
+                qCard.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <span class="bg-blue-600 text-white font-bold text-xs px-2.5 py-1 rounded-lg">Soal ${idx + 1}</span>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-800">${q.question}</p>
+                    <div class="grid gap-2 pt-1">
+                        ${optionsHTML}
+                    </div>
+                    <div id="expl_${q.id}" class="hidden p-3 rounded-xl text-xs space-y-1"></div>
+                `;
+
+                container.appendChild(qCard);
+            });
+        }
+
+        function selectAnswer(qId, optionIdx) {
+            userAnswers[qId] = optionIdx;
+        }
+
+        function checkQuizAnswers() {
+            let score = 0;
+
+            quizQuestions.forEach(q => {
+                const explEl = document.getElementById(`expl_${q.id}`);
+                const userChoice = userAnswers[q.id];
+
+                explEl.classList.remove('hidden', 'bg-emerald-50', 'bg-rose-50', 'border-emerald-200', 'border-rose-200', 'text-emerald-900', 'text-rose-900');
+
+                if (userChoice === undefined) {
+                    explEl.classList.add('bg-amber-50', 'border', 'border-amber-200', 'text-amber-900');
+                    explEl.innerHTML = `<strong>Belum Dijawab:</strong> ${q.explanation}`;
+                } else if (userChoice === q.answer) {
+                    score += 25;
+                    explEl.classList.add('bg-emerald-50', 'border', 'border-emerald-200', 'text-emerald-900');
+                    explEl.innerHTML = `<strong class="text-emerald-700"><i class="fa-solid fa-circle-check mr-1"></i> Jawaban Benar!</strong><br>${q.explanation}`;
+                } else {
+                    explEl.classList.add('bg-rose-50', 'border', 'border-rose-200', 'text-rose-900');
+                    explEl.innerHTML = `<strong class="text-rose-700"><i class="fa-solid fa-circle-xmark mr-1"></i> Jawaban Kurang Tepat.</strong><br>${q.explanation}`;
+                }
+            });
+
+            document.getElementById('quiz-score').innerText = score;
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function resetQuiz() {
+            userAnswers = {};
+            document.getElementById('quiz-score').innerText = '0';
+            renderQuiz();
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+    </script>
+</body>
+</html>
